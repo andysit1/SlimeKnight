@@ -17,6 +17,7 @@ int frame;
 int playerDir{1};
 float timer;
 bool isMoving{false};
+bool shouldMove{false};
 
 void Player::getInputs()
 {
@@ -29,25 +30,37 @@ void Player::getInputs()
     position.x += speed * deltatime;
     playerDir = 1;
     isMoving = true;
+    shouldMove = true;
   }
   if (IsKeyDown('A'))
   {
     position.x -= speed * deltatime;
     playerDir = -1;
     isMoving = true;
+    shouldMove = true;
   }
   if (IsKeyDown('W'))
   {
     position.y -= speed * deltatime;
     isMoving = true;
+    shouldMove = true;
   }
   if (IsKeyDown('S'))
   {
     position.y += speed * deltatime;
     isMoving = true;
+    shouldMove = true;
   }
 
-  std::cout << isMoving << std::endl;
+  if(IsKeyDown('A') && IsKeyDown('D'))
+  {
+    shouldMove = false;
+  }
+
+  if(IsKeyDown('W') && IsKeyDown('S'))
+  {
+    shouldMove = false;
+  }
 }
 
 
@@ -61,7 +74,7 @@ void Player::playerAnimation()
   }
   frame = frame % 6;
 
-  if (isMoving)
+  if (isMoving && shouldMove)
   {
     DrawTexturePro(playerTexRun,
                 Rectangle{(float)(texWidth * frame), 0.0f, playerDir * (float)texWidth, (float)texHeight},
